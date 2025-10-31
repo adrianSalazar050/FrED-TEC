@@ -9,4 +9,4 @@ To run it follow the next steps:
 5. Open the file mainGUI.py in Visual Studio Code and run it while connected to the Arduino Mega.
 
 Debugging tips:
-1. If the mainGUI.py file freezes or does not run, check manually the port at which your laptop is connected to the arduino and change it on the section of "Manual Ports".
+1. If the mainGUI.py file freezes or does not run, check manually the port at which your laptop is connected to the Arduino Mega and change it on the function of "encontrar_puerto_arduino".
