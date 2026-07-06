@@ -78,7 +78,7 @@ try:
     puerto = encontrar_puerto_arduino() or "/dev/ttyACM0"
     arduino = serial.Serial(puerto, 115200, timeout=1)
 except Exception as e:
-    print(f"Error al abrir el puerto serial: {e}")
+    print(f"Error opening serial port: {e}")
     sys.exit(1)
 
 
@@ -156,7 +156,7 @@ class ControlGUI(QWidget):
         else:
             self.cap = cv2.VideoCapture(0)
         if not self.cap.isOpened():
-            self.label_camara.setText("Cámara no disponible")
+            self.label_camara.setText("Camera not available")
 
         self.timer_camara = QTimer()
         self.timer_camara.timeout.connect(self.actualizar_imagen_camara)
@@ -193,7 +193,7 @@ class ControlGUI(QWidget):
         bottom_row_layout.setContentsMargins(4, 4, 4, 4)
 
         # ACTUATOR INDICATORS
-        status_box = QGroupBox("Estado de Actuadores")
+        status_box = QGroupBox("Actuator Status")
         status_box.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
         status_box_layout = QVBoxLayout(status_box)
         status_box_layout.setSpacing(6)
@@ -205,7 +205,7 @@ class ControlGUI(QWidget):
             dot = QLabel()
             dot.setFixedSize(18, 18)
             self.indicator_colors.append(dot)
-            lbl = QLabel(f"{name}: APAGADO")
+            lbl = QLabel(f"{name}: OFF")
             lbl.setStyleSheet("font-size: 12px;")
             self.indicator_labels.append(lbl)
             row.addWidget(dot)
@@ -216,7 +216,7 @@ class ControlGUI(QWidget):
         bottom_row_layout.addWidget(status_box)
 
         # DIAMETER DISPLAY
-        grosor_box = QGroupBox("Grosor del Filamento")
+        grosor_box = QGroupBox("Filament Diameter")
         grosor_box.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
         grosor_box_layout = QVBoxLayout(grosor_box)
         self.label_grosor_display = QLabel("-- mm")
@@ -244,7 +244,7 @@ class ControlGUI(QWidget):
         right_layout.setSpacing(10)
 
         # ACTUATOR BUTTONS
-        act_group = QGroupBox("Actuadores")
+        act_group = QGroupBox("Actuators")
         act_group.setStyleSheet("QGroupBox { font-weight: bold; }")
         act_layout = QGridLayout(act_group)
         act_layout.setSpacing(6)
@@ -271,13 +271,13 @@ class ControlGUI(QWidget):
         right_layout.addWidget(act_group)
 
         # MANUAL INPUT SLIDERS
-        slider_group = QGroupBox("Parámetros de Control Manual")
+        slider_group = QGroupBox("Manual Control Parameters")
         slider_group.setStyleSheet("QGroupBox { font-weight: bold; }")
         slider_layout = QVBoxLayout(slider_group)
         slider_layout.setSpacing(4)
 
         # EXTRUDER FREQUENCY SPEED
-        self.lbl_slider = QLabel(f"Velocidad Extrusor: {self.velocidad_extrusor}")
+        self.lbl_slider = QLabel(f"Extruder Speed: {self.velocidad_extrusor}")
         self.slider = QSlider(Qt.Horizontal)
         self.slider.setRange(10, 100)
         self.slider.setValue(self.velocidad_extrusor)
@@ -286,7 +286,7 @@ class ControlGUI(QWidget):
         slider_layout.addWidget(self.slider)
 
         # TEMPERATURE
-        self.lbl_temp = QLabel(f"Temperatura objetivo: {self.temperatura_objetivo} °C")
+        self.lbl_temp = QLabel(f"Target Temperature: {self.temperatura_objetivo} °C")
         self.slider_temp = QSlider(Qt.Horizontal)
         self.slider_temp.setRange(30, 230)
         self.slider_temp.setValue(self.temperatura_objetivo)
@@ -295,7 +295,7 @@ class ControlGUI(QWidget):
         slider_layout.addWidget(self.slider_temp)
 
         # DC MOTOR SPEED
-        self.lbl_dc = QLabel(f"Velocidad Motor DC (RPM): {self.velocidad_dc_objetivo}")
+        self.lbl_dc = QLabel(f"DC Motor Speed (RPM): {self.velocidad_dc_objetivo}")
         self.slider_dc = QSlider(Qt.Horizontal)
         self.slider_dc.setRange(5, 60)
         self.slider_dc.setValue(self.velocidad_dc_objetivo)
@@ -304,7 +304,7 @@ class ControlGUI(QWidget):
         slider_layout.addWidget(self.slider_dc)
 
         # FAN SPEED
-        self.lbl_fan_speed = QLabel("Velocidad del Ventilador (%): 0")
+        self.lbl_fan_speed = QLabel("Fan Speed (%): 0")
         self.slider_fan = QSlider(Qt.Horizontal)
         self.slider_fan.setRange(0, 100)
         self.slider_fan.setValue(0)
@@ -314,7 +314,7 @@ class ControlGUI(QWidget):
 
         right_layout.addWidget(slider_group)
 
-        self.export_button = QPushButton("📁  Exportar CSV")
+        self.export_button = QPushButton("📁  Export CSV")
         self.export_button.setStyleSheet(
             "QPushButton { padding: 7px; background-color: #2980b9; color: white; "
             "font-weight: bold; border-radius: 4px; }"
@@ -324,7 +324,7 @@ class ControlGUI(QWidget):
         right_layout.addWidget(self.export_button)
 
         # PID GAINS IN ARDUINO
-        pid_group = QGroupBox("Ajuste de Ganancias PID (Arduino)")
+        pid_group = QGroupBox("PID Gain Tuning (Arduino)")
         pid_group.setStyleSheet("QGroupBox { font-weight: bold; }")
         pid_layout = QFormLayout(pid_group)
         pid_layout.setSpacing(5)
@@ -347,7 +347,7 @@ class ControlGUI(QWidget):
 
         right_layout.addWidget(pid_group)
 
-        self.btn_update_pids = QPushButton("Actualizar Ganancias K PID")
+        self.btn_update_pids = QPushButton("Update PID K Gains")
         self.btn_update_pids.setStyleSheet(
             "QPushButton { padding: 6px; background-color: #8e44ad; color: white; "
             "font-weight: bold; border-radius: 4px; }"
@@ -357,7 +357,7 @@ class ControlGUI(QWidget):
         right_layout.addWidget(self.btn_update_pids)
 
         # ── Cascade Diameter Control ──
-        diameter_group = QGroupBox("Control en Cascada de Diámetro")
+        diameter_group = QGroupBox("Cascade Diameter Control")
         diameter_group.setStyleSheet(
             "QGroupBox { font-weight: bold; border: 2px solid #e67e22; "
             "border-radius: 6px; margin-top: 8px; padding-top: 6px; }"
@@ -367,7 +367,7 @@ class ControlGUI(QWidget):
         diameter_layout.setSpacing(8)
         diameter_layout.setContentsMargins(10, 14, 10, 10)
 
-        self.cb_enable_diameter = QCheckBox("Habilitar Control de Diámetro")
+        self.cb_enable_diameter = QCheckBox("Enable Diameter Control")
         self.cb_enable_diameter.setStyleSheet("font-size: 13px; font-weight: bold; color: #e67e22;")
         self.cb_enable_diameter.stateChanged.connect(self.toggle_diameter_control)
         diameter_layout.addWidget(self.cb_enable_diameter)
@@ -406,7 +406,7 @@ class ControlGUI(QWidget):
         diameter_layout.addLayout(param_grid)
 
         btn_row = QHBoxLayout()
-        self.btn_update_diam_pid = QPushButton("Actualizar PID")
+        self.btn_update_diam_pid = QPushButton("Update PID")
         self.btn_update_diam_pid.setStyleSheet(
             "QPushButton { padding: 6px; background-color: #e67e22; color: white; "
             "font-weight: bold; border-radius: 4px; }"
@@ -414,7 +414,7 @@ class ControlGUI(QWidget):
         )
         self.btn_update_diam_pid.clicked.connect(self.update_master_pid_gains)
 
-        self.btn_reset_pid = QPushButton("Resetear PID")
+        self.btn_reset_pid = QPushButton("Reset PID")
         self.btn_reset_pid.setStyleSheet(
             "QPushButton { padding: 6px; background-color: #7f8c8d; color: white; "
             "font-weight: bold; border-radius: 4px; }"
@@ -426,7 +426,7 @@ class ControlGUI(QWidget):
         btn_row.addWidget(self.btn_reset_pid)
         diameter_layout.addLayout(btn_row)
 
-        self.lbl_rpm_setpoint = QLabel("RPM Setpoint actual: --")
+        self.lbl_rpm_setpoint = QLabel("Current RPM Setpoint: --")
         self.lbl_rpm_setpoint.setStyleSheet(
             "font-weight: bold; font-size: 13px; color: #e67e22; "
             "background-color: #fef9f0; border: 1px solid #f0c080; "
@@ -438,12 +438,12 @@ class ControlGUI(QWidget):
         right_layout.addWidget(diameter_group)
 
         # VIDEO
-        video_group = QGroupBox("Video de Extrusión")
+        video_group = QGroupBox("Extrusion Video")
         video_group.setStyleSheet("QGroupBox { font-weight: bold; }")
         video_layout = QVBoxLayout(video_group)
         video_layout.setContentsMargins(4, 8, 4, 4)
 
-        self.label_camara = QLabel("Sin señal")
+        self.label_camara = QLabel("No signal")
         self.label_camara.setFixedSize(380, 285)
         self.label_camara.setAlignment(Qt.AlignCenter)
         self.label_camara.setStyleSheet(
@@ -470,13 +470,13 @@ class ControlGUI(QWidget):
             self.pid_diameter.Kp = kp
             self.pid_diameter.Ki = ki
             self.pid_diameter.Kd = kd
-            print(f"Ganancias PID Diámetro actualizadas: Kp={kp}, Ki={ki}, Kd={kd}")
+            print(f"Diameter PID gains updated: Kp={kp}, Ki={ki}, Kd={kd}")
         except ValueError:
-            print("Error: valores PID inválidos")
+            print("Error: invalid PID values")
 
     def reset_master_pid(self):
         self.pid_diameter.reset()
-        print("PID Diámetro reseteado")
+        print("Diameter PID reset")
 
     # ENABLE AND DISABLE DIAMETER CONTROL
 
@@ -510,7 +510,7 @@ class ControlGUI(QWidget):
             self.pid_diameter.reset()
             self.pid_diameter.setpoint = self.spin_setpoint.value()
             self.last_pid_time = time.monotonic()
-            print("Control de diámetro ACTIVADO")
+            print("Diameter control ENABLED")
         else:
             if self.saved_manual_values:
                 saved_estado = self.saved_manual_values['estado']
@@ -528,7 +528,7 @@ class ControlGUI(QWidget):
 
             self.slider_dc.setEnabled(True)
             self.set_manual_controls_enabled(True)
-            print("Control de diámetro DESACTIVADO")
+            print("Diameter control DISABLED")
 
     def set_actuator_state(self, index, state):
         if self.estado[index] != state:
@@ -621,7 +621,7 @@ class ControlGUI(QWidget):
                         cv2.drawContours(frame, [box], 0, (0, 255, 0), 2)
                         cv2.drawContours(frame, [main_contorno], -1, (255, 0, 0), 1)
                         cv2.drawContours(frame, [hull], -1, (0, 0, 255), 1)
-                        cv2.putText(frame, f"Grosor: {dist_mm:.3f} mm", (10, 30),
+                        cv2.putText(frame, f"Diameter: {dist_mm:.3f} mm", (10, 30),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
         vis = cv2.resize(frame, (380, 285))
@@ -638,9 +638,9 @@ class ControlGUI(QWidget):
             arduino.write(cmd_pid_h.encode())
             cmd_pid_m = f"PIDM:{self.le_kp_m.text()},{self.le_ki_m.text()},{self.le_kd_m.text()}\n"
             arduino.write(cmd_pid_m.encode())
-            print(f"PIDs enviados: {cmd_pid_h.strip()} | {cmd_pid_m.strip()}")
+            print(f"PIDs sent: {cmd_pid_h.strip()} | {cmd_pid_m.strip()}")
         except Exception as e:
-            print(f"Error al enviar ganancias PID: {e}")
+            print(f"Error sending PID gains: {e}")
 
     def toggle(self, index):
         if not self.diameter_control_enabled:
@@ -656,26 +656,26 @@ class ControlGUI(QWidget):
         name = self.actuator_names[index]
         if self.estado[index] == '1':
             dot.setStyleSheet("background-color: #27ae60; border-radius: 9px;")
-            lbl.setText(f"{name}: ENCENDIDO")
+            lbl.setText(f"{name}: ON")
         else:
             dot.setStyleSheet("background-color: #e74c3c; border-radius: 9px;")
-            lbl.setText(f"{name}: APAGADO")
+            lbl.setText(f"{name}: OFF")
 
     def actualizar_velocidad_extrusor(self, val):
         self.velocidad_extrusor = val
-        self.lbl_slider.setText(f"Velocidad Extrusor: {val}")
+        self.lbl_slider.setText(f"Extruder Speed: {val}")
 
     def actualizar_temperatura(self, val):
         self.temperatura_objetivo = val
-        self.lbl_temp.setText(f"Temperatura objetivo: {val} °C")
+        self.lbl_temp.setText(f"Target Temperature: {val} °C")
 
     def actualizar_velocidad_dc(self, val):
         self.velocidad_dc_objetivo = val
-        self.lbl_dc.setText(f"Velocidad Motor DC (RPM): {val}")
+        self.lbl_dc.setText(f"DC Motor Speed (RPM): {val}")
 
     def actualizar_velocidad_fan(self, val):
         self.velocidad_fan = val
-        self.lbl_fan_speed.setText(f"Velocidad del Ventilador (%): {val}")
+        self.lbl_fan_speed.setText(f"Fan Speed (%): {val}")
 
     def actualizar(self):
         try:
@@ -696,18 +696,18 @@ class ControlGUI(QWidget):
                         self.last_rpm_setpoint = rpm_setpoint
                         self.last_pid_time = now
                         arduino.write(f"DCSPEED:{rpm_setpoint:.1f}\n".encode())
-                        self.lbl_rpm_setpoint.setText(f"RPM Setpoint actual: {rpm_setpoint:.1f}")
+                        self.lbl_rpm_setpoint.setText(f"Current RPM Setpoint: {rpm_setpoint:.1f}")
                         self.slider_dc.setValue(int(rpm_setpoint))
                 else:
                     arduino.write(f"DCSPEED:{self.last_rpm_setpoint:.1f}\n".encode())
-                    self.lbl_rpm_setpoint.setText(f"RPM Setpoint actual: {self.last_rpm_setpoint:.1f} (sin medición)")
+                    self.lbl_rpm_setpoint.setText(f"Current RPM Setpoint: {self.last_rpm_setpoint:.1f} (no measurement)")
             else:
                 arduino.write(f"SPEED:{self.velocidad_extrusor}\n".encode())
                 arduino.write(f"TEMP:{self.temperatura_objetivo}\n".encode())
                 arduino.write(f"DCSPEED:{self.velocidad_dc_objetivo}\n".encode())
                 arduino.write(f"FANSPEED:{self.velocidad_fan}\n".encode())
         except Exception as e:
-            print(f"Error enviando comandos: {e}")
+            print(f"Error sending commands: {e}")
 
         try:
             while arduino.in_waiting:
@@ -733,10 +733,10 @@ class ControlGUI(QWidget):
         max_len = 100
         self.canvas_temp.plot(self.temp_data[-max_len:], ylabel="Temp (°C)")
         self.canvas_motor.plot(self.motor_rpm_data[-max_len:], ylabel="Motor DC (RPM)")
-        self.canvas_grosor.plot(self.grosor_data[-max_len:], ylabel="Grosor (mm)")
+        self.canvas_grosor.plot(self.grosor_data[-max_len:], ylabel="Diameter (mm)")
 
     def export_csv(self):
-        path, _ = QFileDialog.getSaveFileName(self, "Guardar CSV", "datos_sesion.csv", "CSV Files (*.csv)")
+        path, _ = QFileDialog.getSaveFileName(self, "Save CSV", "session_data.csv", "CSV Files (*.csv)")
         if not path:
             return
         all_data = [
@@ -749,8 +749,8 @@ class ControlGUI(QWidget):
             with open(path, 'w', newline='') as f:
                 writer = csv.writer(f)
                 writer.writerow([
-                    'Timestamp', 'Temperatura_Hotend', 'RPM_Motor_DC', 'Grosor_Filamento',
-                    'Estado_Motor_DC', 'Estado_Fan', 'Estado_Extrusor', 'Estado_Heater'
+                    'Timestamp', 'Hotend_Temperature', 'DC_Motor_RPM', 'Filament_Diameter',
+                    'DC_Motor_State', 'Fan_State', 'Extruder_State', 'Heater_State'
                 ])
                 for i in range(max_rows):
                     writer.writerow([
@@ -763,9 +763,9 @@ class ControlGUI(QWidget):
                         self.extruder_state_data[i] if i < len(self.extruder_state_data) else '',
                         self.heater_state_data[i] if i < len(self.heater_state_data) else ''
                     ])
-            print(f"Datos guardados en {path}")
+            print(f"Data saved to {path}")
         except Exception as e:
-            print(f"Error al guardar CSV: {e}")
+            print(f"Error saving CSV: {e}")
 
     def closeEvent(self, event):
         if hasattr(self, 'cap') and self.cap.isOpened():
